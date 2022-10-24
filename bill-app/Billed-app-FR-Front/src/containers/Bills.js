@@ -29,12 +29,13 @@ export default class {
 
   getBills = () => {
     if (this.store) {
+      console.log(this.store)
       return this.store
       .bills()
       .list()
       .then(snapshot => {
         const bills = snapshot
-          .sort((a, b) => new Date(b.date).getTime() > new Date(a.date).getTime() ? 1 : -1)
+          .sort((a, b) => new Date(a.date) < new Date(b.date) ? 1 : -1)
           .map(doc => {
             try {
               return {
@@ -48,13 +49,14 @@ export default class {
               console.log(e,'for',doc)
               return {
                 ...doc,
-                date: doc.date,
+                date: formatDate(doc.date),
                 status: formatStatus(doc.status)
               }
             }
           })
           
           console.log('length', bills.length);
+          console.log(bills)
         return bills
       })
     }
