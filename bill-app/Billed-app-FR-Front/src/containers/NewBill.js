@@ -24,7 +24,6 @@ export default class NewBill {
     const email = JSON.parse(localStorage.getItem("user")).email
     formData.append('file', file)
     formData.append('email', email)
-   console.log(file)
     this.store
       .bills()
       .create({

@@ -1,8 +1,13 @@
 const { Bill } = require('../models');
 
-const getFileURL = (filePath) => `http://localhost:5678/${filePath}`;
+const getFileURL = (filePath) => 
+{
+  var test = `http://localhost:5678/${filePath}`;
+  test = test.replace(new RegExp(/\\/g), '/');
+  return test
+}
 
-const isPicture = (mimeType) => ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'].includes(mimeType);
+const isPicture = (mimeType) => ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'application/pdf'].includes(mimeType);
 
 const create = async (req, res) => {
   const { user } = req;
