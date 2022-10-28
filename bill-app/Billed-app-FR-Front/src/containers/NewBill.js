@@ -20,6 +20,7 @@ export default class NewBill {
     const file = this.document.querySelector(`input[data-testid="file"]`).files[0]
     const filePath = e.target.value.split(/\\/g)
     const fileName = filePath[filePath.length-1]
+    /* Bug Hunt Bills: add condition for format file */ 
     if(fileName.split(".")[1] === 'jpg' || fileName.split(".")[1] === 'png' || fileName.split(".")[1] === 'jpeg') {
     const formData = new FormData()
     const email = JSON.parse(localStorage.getItem("user")).email
@@ -42,7 +43,9 @@ export default class NewBill {
       }).catch(error => console.error(error))
     }
     else {
+      /* Bug Hunt Bills : remove file if not good format*/
       this.document.querySelector(`input[data-testid="file"]`).value = "";
+      alert("Please, use .png/jpeg/jpg format")
     }
     }   
   handleSubmit = e => {
