@@ -8,9 +8,11 @@ import { bills } from "../fixtures/bills.js"
 import {ROUTES, ROUTES_PATH} from "../constants/routes.js";
 import {localStorageMock} from "../__mocks__/localStorage.js";
 import Bills, {handleClickNewBill, handleClickIconEye} from "../containers/Bills.js";
+import mockStore from "../__mocks__/store";
 
 import router from "../app/Router.js";
 import Actions from "../views/Actions.js";
+
 /*
 window.$ = jest.fn().mockImplementation(() => {
   return {
@@ -72,19 +74,7 @@ describe("Given I am connected as an employee", () => {
       const formNewBill = screen.getByTestId('form-new-bill')
       expect(formNewBill).toBeTruthy()
     })
-    /*
-    test("Then add event click for ClickIconEye button", () => {
-      const handleClickIconEyes = jest.fn(handleClickIconEye);
-      document.body.innerHTML = BillsUI({ data: bills });
-      const btn = screen.getAllByTestId("icon-eye");
-      btn.forEach(icon => {
-      icon.addEventListener("click", handleClickIconEyes)
-      });
-      fireEvent.click(btn[0]);
-      expect(btn).toBeDefined();
-      expect(handleClickIconEyes).toHaveBeenCalledTimes(1)
-    })
-    */
+   
   })
   describe('When I click on the icon eye',  () => {
     test("Then the modal opens", async () => {
@@ -114,5 +104,23 @@ describe("Given I am connected as an employee", () => {
 
 
   })
-
+  // test d'intégration GET
+  describe("Given I am a user connected as Employee", () => {
+  describe("When I navigate to Bills", () => {
+    test("fetches bills from mock API GET", async () => {
+      Object.defineProperty(window, 'localStorage', { value: localStorageMock })
+      window.localStorage.setItem('user', JSON.stringify({
+        type: 'Employee'
+      }))
+      const billls = new Bills({
+        document, onNavigate, store: mockStore, localStorage: window.localStorage
+      })
+      const getBill = jest.fn((e) => billls.getBills())
+      const callBill = await getBill()
+      
+      expect(getBill).toHaveBeenCalledTimes(1)
+      expect(callBill.length).toBe(4);
+    })
+  })
+})
 })
