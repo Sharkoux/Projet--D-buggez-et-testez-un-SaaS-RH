@@ -17,6 +17,7 @@ export default class NewBill {
   }
   handleChangeFile = e => {
     e.preventDefault()
+    this.document.querySelector(`span[class="alert"]`).innerHTML = ""
     const file = this.document.querySelector(`input[data-testid="file"]`).files[0]
     const filePath = e.target.value.split(/\\/g)
     const fileName = filePath[filePath.length-1]
@@ -26,7 +27,7 @@ export default class NewBill {
     const email = JSON.parse(localStorage.getItem("user")).email
     formData.append('file', file)
     formData.append('email', email)
-    console.log(fileName)
+    console.log(formData)
     this.store
       .bills()
       .create({
@@ -45,7 +46,7 @@ export default class NewBill {
     else {
       /* Bug Hunt Bills : remove file if not good format*/
       this.document.querySelector(`input[data-testid="file"]`).value = "";
-      alert("Please, use .png/jpeg/jpg format")
+      this.document.querySelector(`span[class="alert"]`).innerHTML = "Please, use .png/jpeg/jpg format"
     }
     }   
   handleSubmit = e => {
