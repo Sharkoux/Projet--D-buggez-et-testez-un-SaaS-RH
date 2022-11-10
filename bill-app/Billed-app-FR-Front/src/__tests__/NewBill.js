@@ -9,6 +9,8 @@ import {ROUTES, ROUTES_PATH} from "../constants/routes.js";
 import {localStorageMock} from "../__mocks__/localStorage.js";
 import {handleChangeFile, handleSubmit, updateBill} from "../containers/NewBill.js"
 import router from "../app/Router.js";
+import mockStore from "../__mocks__/store";
+
 
 describe("Given I am connected as an employee", () => {
   describe("When I am on NewBill Page", () => {
@@ -26,8 +28,10 @@ describe("Given I am connected as an employee", () => {
       const MailIcon = screen.getByTestId('icon-mail')
       expect(MailIcon.classList.contains("active-icon")).toBeTruthy()
     })
-    test("Then I add a supporting file", async () => {
+    describe("When I add not supporting file", () => {
+    test("Then I can't submit the form and I get an error message", async () => {
       
+      const extensionAccepted = ['png', 'jpg',  'jpeg']
       Object.defineProperty(window, 'localStorage', { value: localStorageMock })
       window.localStorage.setItem('user', JSON.stringify({
         type: 'Employee'
@@ -42,28 +46,44 @@ describe("Given I am connected as an employee", () => {
       })
       const inputFile = screen.getByTestId("file")
       const handleChangeFiles = jest.fn((e) => newBil.handleChangeFile(e))
-      inputFile.addEventListener("input", handleChangeFiles)
-      fireEvent.change(inputFile, {target: {file: 'test.jpg'}})
-      expect(inputFile.file).toBe("test.jpg")
-      //fireEvent.change(inputFile, {target: {file: 'test.pdf'}})
-      //const alert = await screen.getByText("Please, use .png/jpeg/jpg format")
-      //expect(alert).toBeTruthy()
+      inputFile.addEventListener("change", handleChangeFiles)
+      fireEvent.change(inputFile, {target: {file: 'test.txt'}})
+      const alert = await screen.getByText("Please, use .png/jpeg/jpg format")
+      expect(handleChangeFiles).toHaveBeenCalled()
+      expect(alert).toBeTruthy()
+      //expect(extensionAccepted).toContainEqual(extension).toBeFalsy()
     })
-    test("Then I submit data form", async () => {
-     
-      document.body.innerHTML = NewBillUI()
-    
-      const store = null
-      const newBil = new NewBill({
-        document, onNavigate, store, localStorage: window.localStorage
-      })
-      const form = screen.getByTestId("form-new-bill")      
-      const handleSubmits = jest.fn((e) => e.preventDefault())
+  })
+    describe("When I add supporting file", () => {
+      test("Then I submit data form", async () => {
+        Object.defineProperty(window, 'localStorage', { value: localStorageMock })
+        window.localStorage.setItem('user', JSON.stringify({
+          type: 'Employee'
+        }))
+        document.body.innerHTML = NewBillUI()
+        const onNavigate = (pathname) => {
+          document.body.innerHTML = ROUTES({ pathname })
+        }
+        
+        const newBil = new NewBill({
+          document, onNavigate, store: mockStore, localStorage: window.localStorage
+        })
+        const inputFile = screen.getByTestId("file")
+        const handleChangeFiles = jest.fn((e) => newBil.handleChangeFile(e))
+        inputFile.addEventListener("change", handleChangeFiles)
+        fireEvent.change(inputFile, {target: {file: 'test.jpg'}})
+        expect(handleChangeFiles).toHaveBeenCalled()
+        expect(inputFile.file).toEqual('test.jpg')
+
+        
+        const form = screen.getByTestId("form-new-bill")      
+        const handleSubmits = jest.fn((e) => newBil.handleSubmit)
       
-      form.addEventListener("submit", handleSubmits)
-      fireEvent.submit(form)
-      expect(handleSubmits).toHaveBeenCalled()
+        form.addEventListener("submit", handleSubmits)
+        fireEvent.submit(form)
+        expect(handleSubmits).toHaveBeenCalled()
+        expect(screen.getByText("Mes notes de frais")).toBeTruthy()
     }) 
   })
-
+})
 })
