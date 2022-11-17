@@ -10,7 +10,7 @@ import {localStorageMock} from "../__mocks__/localStorage.js";
 import {handleChangeFile, handleSubmit, updateBill} from "../containers/NewBill.js"
 import router from "../app/Router.js";
 import mockStore from "../__mocks__/store";
-
+import { bills } from "../fixtures/bills"
 
 describe("Given I am connected as an employee", () => {
   describe("When I am on NewBill Page", () => {
@@ -152,6 +152,47 @@ describe("Given I am a user connected as Employee", () => {
       expect(handleSubmits).toHaveBeenCalled()
       expect(newBil.updateBill).toHaveBeenCalled()
          
+    })
+    test("fetches bills from an API and fails with 500 message error", async () => {
+    jest.spyOn(mockStore, "bills")
+    jest.spyOn(console, 'error').mockImplementation(() => {})
+    Object.defineProperty(
+        window,
+        'localStorage',
+        { value: localStorageMock }
+    )
+    window.localStorage.setItem('user', JSON.stringify({
+      type: 'Employee',
+    }))
+    const root = document.createElement("div")
+    root.setAttribute("id", "root")
+    document.body.appendChild(root)
+    router()
+    
+    mockStore.bills.mockImplementationOnce(() => {
+      return {
+        update : () =>  {
+          return Promise.reject(new Error('Erreur 500'))
+        }
+      }})
+    window.onNavigate(ROUTES_PATH.NewBill)
+
+    const newBil = new NewBill({
+      document, onNavigate, store: mockStore, localStorage: window.localStorage
+    })
+
+       
+    const form = screen.getByTestId("form-new-bill")      
+    const handleSubmits = jest.fn((e) => newBil.handleSubmit)
+  
+    form.addEventListener("submit", handleSubmits)
+    fireEvent.submit(form)
+
+
+    await new Promise(process.nextTick);
+    expect(console.error).toBeCalled()
+
+
     })
   })
 })

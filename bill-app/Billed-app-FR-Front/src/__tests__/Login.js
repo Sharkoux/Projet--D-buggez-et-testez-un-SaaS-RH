@@ -26,6 +26,7 @@ describe("Given that I am a user on login page", () => {
       expect(screen.getByTestId("form-employee")).toBeTruthy();
     });
   });
+});
 
   describe("When I do fill fields in incorrect format and I click on employee button Login In", () => {
     test("Then It should renders Login page", () => {
@@ -94,6 +95,7 @@ describe("Given that I am a user on login page", () => {
         store,
       });
 
+
       const handleSubmit = jest.fn(login.handleSubmitEmployee);
       login.login = jest.fn().mockResolvedValue({});
       form.addEventListener("submit", handleSubmit);
@@ -108,14 +110,19 @@ describe("Given that I am a user on login page", () => {
           password: inputData.password,
           status: "connected",
         })
-      );
-    });
+    )
 
-    test("It should renders Bills page", () => {
-      expect(screen.getAllByText("Mes notes de frais")).toBeTruthy();
-    });
+    
   });
+ 
+  test("It should renders Bills page", () => {
+    expect(screen.getAllByText("Mes notes de frais")).toBeTruthy();
+  });
+  
+
 });
+
+
 
 describe("Given that I am a user on login page", () => {
   describe("When I do not fill fields and I click on admin button Login In", () => {
