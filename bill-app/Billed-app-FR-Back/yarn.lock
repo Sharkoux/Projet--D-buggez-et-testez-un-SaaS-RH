@@ -6641,6 +6641,11 @@
   dependencies:
     "string-width" "^1.0.2 || 2 || 3 || 4"
 
+"win-node-env@^0.6.1":
+  "integrity" "sha512-oR+MLQ6jdvwqkLEkKBYxRvBOYbTlQV9dJKn8vLzjA4HCzcqdlCE6H1oOvA7lAdCgNXiOX0xfjl/Y47ZcZN6FDA=="
+  "resolved" "https://registry.npmjs.org/win-node-env/-/win-node-env-0.6.1.tgz"
+  "version" "0.6.1"
+
 "wkx@^0.5.0":
   "integrity" "sha512-Xng/d4Ichh8uN4l0FToV/258EjMGU9MGcA0HV2d9B/ZpZB3lqQm7nkOdZdm5GhKtLLhAE7PiVQwN4eN+2YJJUg=="
   "resolved" "https://registry.npmjs.org/wkx/-/wkx-0.5.0.tgz"
