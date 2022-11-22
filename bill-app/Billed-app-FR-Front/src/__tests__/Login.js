@@ -4,14 +4,21 @@
 
 import LoginUI from "../views/LoginUI";
 import Login from "../containers/Login.js";
-import { ROUTES } from "../constants/routes";
+import { ROUTES, ROUTES_PATH } from "../constants/routes";
 import { fireEvent, screen } from "@testing-library/dom";
+import router from "../app/Router.js";
+import mockStore from "../__mocks__/store";
+import { bills } from "../fixtures/bills"
 
 describe("Given that I am a user on login page", () => {
+  //Je suis un utilisateur sur la page de connexion.
   describe("When I do not fill fields and I click on employee button Login In", () => {
+    //Je ne remplis pas le champ e-mail ou le champ password du login employé et je clique sur le bouton "Se connecter".
     test("Then It should renders Login page", () => {
+      //Je reste sur la page Login et je suis invité à remplir le champ manquant.
       document.body.innerHTML = LoginUI();
-
+      
+      
       const inputEmailUser = screen.getByTestId("employee-email-input");
       expect(inputEmailUser.value).toBe("");
 
@@ -29,7 +36,9 @@ describe("Given that I am a user on login page", () => {
 });
 
   describe("When I do fill fields in incorrect format and I click on employee button Login In", () => {
+    //Je remplis le champ e-mail du login employé au mauvais format (« pasunemail », « azerty ») et je clique sur le bouton "Se connecter".
     test("Then It should renders Login page", () => {
+      //Je reste sur la page Login et je suis invité à remplir le champ e-mail au bon format.
       document.body.innerHTML = LoginUI();
 
       const inputEmailUser = screen.getByTestId("employee-email-input");
@@ -50,7 +59,9 @@ describe("Given that I am a user on login page", () => {
   });
 
   describe("When I do fill fields in correct format and I click on employee button Login In", () => {
+    //Je remplis le champ e-mail et password du login employé au bon format («johndoe@email.com »), je clique sur le bouton "Se connecter".
     test("Then I should be identified as an Employee in app", () => {
+      //Je m'authentifie en tant qu'employé
       document.body.innerHTML = LoginUI();
       const inputData = {
         email: "johndoe@email.com",
@@ -116,10 +127,10 @@ describe("Given that I am a user on login page", () => {
   });
  
   test("It should renders Bills page", () => {
+    // Je suis envoyé sur la page Bills
     expect(screen.getAllByText("Mes notes de frais")).toBeTruthy();
   });
-  
-
+ 
 });
 
 
@@ -235,3 +246,4 @@ describe("Given that I am a user on login page", () => {
     });
   });
 });
+
