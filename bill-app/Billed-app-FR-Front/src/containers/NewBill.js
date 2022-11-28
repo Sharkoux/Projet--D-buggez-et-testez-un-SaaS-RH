@@ -33,7 +33,6 @@ export default class NewBill {
     const email = JSON.parse(localStorage.getItem("user")).email
     formData.append('file', file)
     formData.append('email', email)
-    console.log(formData)
     this.store
       .bills()
       .create({
@@ -74,7 +73,7 @@ export default class NewBill {
     }
     this.updateBill(bill)
     this.onNavigate(ROUTES_PATH['Bills'])
-    console.log(this.fileUrl, this.billId)
+   
   }
 
   // not need to cover this function by tests
